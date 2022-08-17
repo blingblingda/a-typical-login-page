@@ -27,3 +27,18 @@
       为了不频繁触发 fn，判断 fn 的外面裹了定时器：每打一个字->state 变化->等待 1 秒->触发判断 fn
       但如果全部都加上定时器，其实还是每打一个字都会触发 fn 只是全部延时 1 秒。因此如果在 1 秒内打了第二个字，则需要把第一个字的定时器清除，这样其实最后只执行了打最后一个字的定时器，则达到全部内容打完后统一出发判断 fn 的效果。
    5. 用在 send http request 上效果最明显。
+      **componentWillUnmount - solved repeat request problem**
+
+## useReducer() Hook - useState 高阶版，同时 manage 多组 state
+
+1. scenario: If you update a state, which depends on another state. merging this into one state could be a good idea.
+2. email 目前有两个项目需要管理：email 内容，email 是否合法。两个项目会组成一个 obj 统一由 emailState 管理
+3. userReducer 包含第一个是 fn 接收 state 和 action 两个函数，第二个是 state 的初始值。
+   1. fn 因为不涉及 component 内的内容页不参与 render 因此可以写在外面
+   2. 因为同时管理两个 state，因此 return 一个初始 obj 包含两个项目
+4. 目前 useReducer 中 emailState 就包含两个项目，各配有一个初始值。可以把之前分别使用两个 state 的地方都改为统一处理。这样就解决了 state 问题。
+5. 解决 setState 问题
+   1. 把 useReducer 中的 dispatchEmail 方法分别写在需要修改状态的位置，并用 type 最为暗号标注{type:暗号, val:要更新的新 state}。
+   2. 回到 fn 中，action 包含所有暗号，所以增加条件:
+      1. 如果 action 的 type 为暗号 USER_INPUT，那么就更新 state 里面的 value 为 action.val，更新 state 里面的 isValid 为 action.val 这个内容上在判断是否.includes("@")
+      2. 如果 action 的 type 为暗号 INPUT_BLUR，那么更新 state 里面的 value 为目前 state 最新 value，更新 isValid 为目前 state 的 value 上直接判断是否 include @
