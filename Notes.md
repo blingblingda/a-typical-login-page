@@ -50,3 +50,14 @@
 3. 所以我们在 useEffect 的外面把 isValid 属性分别从 emailState 和 passwordState 中 destructuring 出来并给一个单独的 alias assignment.
 4. 把 dependencies 换成这两个 isValid 只监听这两个的变化即可，这样如果 isValid 为 true，后续就算你输入再多的数字，true 这个事实不变，effect 也就不会被 run。
    I’m pulling out the isValid state here, whenever just the value changes and the validity did not change, this effect will not rerun.
+
+## React Context API: 跳级传递 props, 涉及 useContext Hook
+
+1. 问题：传递一个状态时需要逐级传递-App 传给 MainHeader 传给 Navigation
+2. next to the components folder，单独建一个文件夹 context 放传声筒 js 文件。引入 React，用 React.createContext 创建一个 AuthContext，里面放的东西就是要传输的东西的 default 值。
+3. 在需要传输这个内容的源头，用刚才自己创建的 AuthContext.Provider 把源头整个包裹起来，这样，在这里面的所有组件及后代组件都会有权限收到需要传输的内容，不必再一个一个起属性名字传输了。chain 上所有不必要的传输都可以删掉了。
+4. 收数据有两种方式，原理都是谁要收谁举手
+   1. 用 AuthContext.Consumer 把需要收数据来展示的全部 return 包裹起来。注意，包裹后里面只能放一个(起一个名字 ctx)=>{return (原来 return 的需要收数据展示的 JSX。所有信息都从 cxt.isLoggedIn 这样拿)}
+   2. 在收取的 component 中引入 useContext，把制作的 AuthContext 传声筒引入并倒入其中，生成新变量 ctx。return 里使用时只需要直接从 ctx 里拿数据即可，ctx 就是传声筒。
+5. 传输数据的内容可能不是 default value 那么简单，如果内容可能会更改，可以在 AuthContext.Provider 标签里面增加 value 属性，在该属性内可以对 context 的内容重新定义（定义为可变量）
+6. 不仅数据 value 可以传输，fn 也可以，直接在 Provider 的地方添加（传输用名：具体 fn）即可把该 fn 传输到所有子孙组件，谁需要，谁从 ctx 调用即可。
