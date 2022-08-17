@@ -39,6 +39,5 @@
 4. 目前 useReducer 中 emailState 就包含两个项目，各配有一个初始值。可以把之前分别使用两个 state 的地方都改为统一处理。这样就解决了 state 问题。
 5. 解决 setState 问题
    1. 把 useReducer 中的 dispatchEmail 方法分别写在需要修改状态的位置，并用 type 最为暗号标注{type:暗号, val:要更新的新 state}。
-   2. 回到 fn 中，action 包含所有暗号，所以增加条件:
-      1. 如果 action 的 type 为暗号 USER_INPUT，那么就更新 state 里面的 value 为 action.val，更新 state 里面的 isValid 为 action.val 这个内容上在判断是否.includes("@")
-      2. 如果 action 的 type 为暗号 INPUT_BLUR，那么更新 state 里面的 value 为目前 state 最新 value，更新 isValid 为目前 state 的 value 上直接判断是否 include @
+   2. 回到 fn 中，action 包含所有暗号，所以增加条件: 1. 如果 action 的 type 为暗号 USER_INPUT，那么就更新 state 里面的 value 为 action.val，更新 state 里面的 isValid 为 action.val 这个内容上在判断是否.includes("@") 2. 如果 action 的 type 为暗号 INPUT_BLUR，那么更新 state 里面的 value 为目前 state 最新 value，更新 isValid 为目前 state 的 value 上直接判断是否 include @
+      **use useReducer to combine entereEmail & emailIsValid state management**
