@@ -41,3 +41,12 @@
    1. 把 useReducer 中的 dispatchEmail 方法分别写在需要修改状态的位置，并用 type 最为暗号标注{type:暗号, val:要更新的新 state}。
    2. 回到 fn 中，action 包含所有暗号，所以增加条件: 1. 如果 action 的 type 为暗号 USER_INPUT，那么就更新 state 里面的 value 为 action.val，更新 state 里面的 isValid 为 action.val 这个内容上在判断是否.includes("@") 2. 如果 action 的 type 为暗号 INPUT_BLUR，那么更新 state 里面的 value 为目前 state 最新 value，更新 isValid 为目前 state 的 value 上直接判断是否 include @
       **use useReducer to combine entereEmail & emailIsValid state management**
+      **use useReducer to combine enteredPassword & passwordIsValid state management**
+
+## useReducer & useEffect
+
+1. 重新打开 useEffect, 把 useState 内容改为 useReducer
+2. 问题：this effect runs too often, whenever the email or the passwordState changed. 其实我们只在乎他们各自 isValid。比如输入密码，如果密码已经 valid，我再加更多的数字他还是 valid，其实就不必 run effect 了。
+3. 所以我们在 useEffect 的外面把 isValid 属性分别从 emailState 和 passwordState 中 destructuring 出来并给一个单独的 alias assignment.
+4. 把 dependencies 换成这两个 isValid 只监听这两个的变化即可，这样如果 isValid 为 true，后续就算你输入再多的数字，true 这个事实不变，effect 也就不会被 run。
+   I’m pulling out the isValid state here, whenever just the value changes and the validity did not change, this effect will not rerun.
