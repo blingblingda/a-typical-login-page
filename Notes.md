@@ -61,3 +61,12 @@
    2. 在收取的 component 中引入 useContext，把制作的 AuthContext 传声筒引入并倒入其中，生成新变量 ctx。return 里使用时只需要直接从 ctx 里拿数据即可，ctx 就是传声筒。
 5. 传输数据的内容可能不是 default value 那么简单，如果内容可能会更改，可以在 AuthContext.Provider 标签里面增加 value 属性，在该属性内可以对 context 的内容重新定义（定义为可变量）
 6. 不仅数据 value 可以传输，fn 也可以，直接在 Provider 的地方添加（传输用名：具体 fn）即可把该 fn 传输到所有子孙组件，谁需要，谁从 ctx 调用即可。
+   **React Context - pass value & fn (including useContext hook)**
+
+## Building & Using a Custom Context Provider Component
+
+AuthContext.Provider 目前包裹 App 中的整个 return，所以可以在传声筒 js 中新建一个 AuthContext，把 App 中所有逻辑抽出来放进去，然后直接拿着个 context 包裹 index.js 里面的 App。
+这样做会使 App 的直接子组件变成后代组件跳级，所以 Login 和 Home 两个组件需要使用 useContext 来接收 fn 而不是直接传输。
+这样做的好处是使 App 组件更加简洁，只显示内容，逻辑和信息储存全部提取在传声筒中。每个组件做一件事，分工明确。
+
+**transfer input tag to a Inputs component in Login.js**
